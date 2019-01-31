@@ -53,7 +53,7 @@
 
                         objetJs.posts = JSON.parse(request.responseText);
 
-                        objetJs.posts = objetJs.posts.map(p => { p.title.rendered = escapeHtml(p.title.rendered);
+                        objetJs.posts = objetJs.posts.map(p => { p.title.rendered = decodeEntities(p.title.rendered);
                             return  p});
                         //self.posts = escapeHtml(self.posts);
 
@@ -66,19 +66,30 @@
         })
     };
 
-    function escapeHtml(text) {
-        var map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#8217;',
-            "-": '&#8211;'
-        };
 
-        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
-    }
+    var decodeEntities = (function() {
+        // this prevents any overhead from creating the object each time
+        var element = document.createElement('div');
+
+        function decodeHTMLEntities (str) {
+            if(str && typeof str === 'string') {
+                // strip script/html tags
+                str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+                str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+                element.innerHTML = str;
+                str = element.textContent;
+                element.textContent = '';
+            }
+
+            return str;
+        }
+
+        return decodeHTMLEntities;
+    })();
 
 </script>
+
+
+
 
 
