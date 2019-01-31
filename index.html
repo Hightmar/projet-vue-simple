@@ -54,11 +54,8 @@
                         objetJs.posts = JSON.parse(request.responseText);
 
                         objetJs.posts = objetJs.posts.map(p => { p.title.rendered = decodeEntities(p.title.rendered);
-                            return  p});
-                        //self.posts = escapeHtml(self.posts);
+                        return  p});
 
-                        //console.log(objetJs.posts);
-                        console.log(titles);
                     };
                     request.send()
                 }
