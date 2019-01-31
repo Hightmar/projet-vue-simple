@@ -22,7 +22,7 @@ window.onload = function () {
                 xhr.open('GET', apiURL);
                 xhr.onload = function () {
                     self.posts = JSON.parse(xhr.responseText);
-                    titles = self.posts.map(p => return p.titles);
+                    //titles = self.posts.map(p => return p.titles);
                     //self.posts = escapeHtml(self.posts);
                     console.log(self.posts);
                     console.log(self.posts["title"]);

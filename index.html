@@ -3,23 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="vue.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <title>Home</title>
 </head>
-<body>
-<div id="app">
-    <div class="row">
-        <div v-for="post in posts" class="col-lg-3 col-md-4 col-sm-6">
-            <div class="card">
-                <div class="card-body">
-                    <img :src="post.jetpack_featured_media_url" class="card-img-top" alt="...">
-                    <h5 class="card-title"> {{ post.title.rendered }} </h5>
-                    <a :href="post.link" class="btn btn-primary">En savoir plus</a>
+    <body>
+        <div id="app">
+            <div class="row">
+                <div v-for="post in posts" class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <img :src="post.jetpack_featured_media_url" class="card-img-top" alt="...">
+                            <h5 class="card-title"> {{ post.title.rendered }} </h5>
+                            <a :href="post.link" class="btn btn-primary ">En savoir plus</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-</body>
+    </body>
 </html>
+
+
+<script>
+    var sourceLink = 'https://webandsun.com/wp-json/wp/v2/posts';
+
+    window.onload = function () {
+        var posts = new Vue({
+
+            el: '#app',
+
+            data: {
+                posts: []
+            },
+
+            created: function () {
+                this.fetchData()
+            },
+
+
+            methods: {
+                fetchData: function () {
+                    var request = new XMLHttpRequest();
+                    var objetJs = this;
+                    var titles = [];
+
+                    request.open('GET', sourceLink);
+                    request.onload = function () {
+
+                        objetJs.posts = JSON.parse(request.responseText);
+
+                        objetJs.posts = objetJs.posts.map(p => { p.title.rendered = escapeHtml(p.title.rendered);
+                            return  p});
+                        //self.posts = escapeHtml(self.posts);
+
+                        //console.log(objetJs.posts);
+                        console.log(titles);
+                    };
+                    request.send()
+                }
+            }
+        })
+    };
+
+    function escapeHtml(text) {
+        var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#8217;',
+            "-": '&#8211;'
+        };
+
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+</script>
+
+
