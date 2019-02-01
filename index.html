@@ -14,7 +14,7 @@
                     <div class="card">
                         <div class="card-body">
                             <img :src="post.jetpack_featured_media_url" class="card-img-top" alt="...">
-                            <h5 class="card-title"> {{ post.title.rendered }} </h5>
+                            <h5 class="card-title" v-html="post.title.rendered"></h5>
                             <a :href="post.link" class="btn btn-primary ">En savoir plus</a>
                         </div>
                     </div>
@@ -53,8 +53,6 @@
 
                         objetJs.posts = JSON.parse(request.responseText);
 
-                        objetJs.posts = objetJs.posts.map(p => { p.title.rendered = decodeEntities(p.title.rendered);
-                        return  p});
 
                     };
                     request.send()
@@ -62,27 +60,6 @@
             }
         })
     };
-
-
-    var decodeEntities = (function() {
-        // this prevents any overhead from creating the object each time
-        var element = document.createElement('div');
-
-        function decodeHTMLEntities (str) {
-            if(str && typeof str === 'string') {
-                // strip script/html tags
-                str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
-                str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
-                element.innerHTML = str;
-                str = element.textContent;
-                element.textContent = '';
-            }
-
-            return str;
-        }
-
-        return decodeHTMLEntities;
-    })();
 
 </script>
 
